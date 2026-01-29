@@ -1,0 +1,21 @@
+node_modules
+.env
+dist
+.turbo
+.DS_Store
+.pnpm-store
+
+
+# Terraform
+**/.terraform/*
+**/*.tfstate
+**/*.tfstate.*
+**/crash.log
+**/crash.*.log
+**/.terraform.lock.hcl.backup
+
+# tfvars (real values)
+**/*.tfvars
+**/*.tfvars.json
+**/*.auto.tfvars
+**/*.auto.tfvars.json

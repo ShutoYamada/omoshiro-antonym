@@ -1,0 +1,20 @@
+{
+  "name": "omoshiro-antonym",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "api": "pnpm -F 'api'",
+   "web": "pnpm -F 'web'"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "workspaces": [
+    "services/*"
+  ]
+}

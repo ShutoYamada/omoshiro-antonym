@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  app:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "npm install -g pnpm && pnpm install && tail -f /dev/null"
+    ports:
+      - "${PORT:-3000}:3000"
+      - "${WEB_PORT:-5173}:5173"
