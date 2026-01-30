@@ -46,12 +46,20 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: "gha-terraform@omoshiro-antonym.iam.gserviceaccount.com"
+          token_format: access_token
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${{ env.AR_REGION }}-docker.pkg.dev
+
+      - name: Docker login to Artifact Registry
+        run: |
+          echo "${{ steps.auth.outputs.access_token }}" | docker login \
+            -u oauth2accesstoken \
+            --password-stdin \
+            https://${{ env.AR_REGION }}-docker.pkg.dev
 
       - name: Build Docker Image
         run: |
