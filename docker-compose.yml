@@ -7,5 +7,5 @@ services:
       - .:/app
     command: sh -c "npm install -g pnpm && pnpm install && tail -f /dev/null"
     ports:
-      - "${PORT:-3000}:3000"
+      - "${PORT:-8080}:8080"
       - "${WEB_PORT:-5173}:5173"

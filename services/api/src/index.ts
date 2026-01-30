@@ -19,5 +19,5 @@ app.post("/generate", async (req: Request, res: Response) => {
   });
 });
 
-const port = Number(process.env.PORT) || 3000;
+const port = Number(process.env.PORT) || 8080;
 app.listen(port, "0.0.0.0", () => console.log(`listening on ${port}`));

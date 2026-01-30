@@ -1,0 +1,4 @@
+project_id = "<YOUR_PROJECT_ID>"
+region     = "asia-northeast1"
+service_name = "omoshiro-api"
+image = "asia-northeast1-docker.pkg.dev/<YOUR_PROJECT_ID>/omoshiro/api:dev"

@@ -1,0 +1,99 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Deploy target"
+        required: true
+        type: choice
+        # options: [api, web, both]
+        options: [api]
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  # -----------------------------
+  # Backend (Cloud Run)
+  # -----------------------------
+  deploy_backend:
+    if: ${{ inputs.target == 'api' || inputs.target == 'both' }}
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      id-token: write
+      contents: read
+
+    env:
+      GCP_PROJECT_ID: omoshiro-antonym
+      AR_REGION: asia-northeast1
+      AR_REPO: omoshiro
+      IMAGE_NAME: api
+      IMAGE_URI: asia-northeast1-docker.pkg.dev/omoshiro-antonym/omoshiro/api:dev
+
+      TF_VAR_project_id: omoshiro-antonym
+      TF_VAR_region: asia-northeast1
+      TF_VAR_service_name: omoshiro-api
+      TF_VAR_image: asia-northeast1-docker.pkg.dev/omoshiro-antonym/omoshiro/api:dev
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: "gha-terraform@omoshiro-antonym.iam.gserviceaccount.com"
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.AR_REGION }}-docker.pkg.dev
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            --no-cache \
+            -t ${{ env.IMAGE_URI }} .
+
+      - name: Push to Artifact Registry
+        id: push
+        run: |
+          docker push ${{ env.IMAGE_URI }}
+          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $IMAGE_URI)
+          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: infra
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: infra
+        env:
+          TF_VAR_image: ${{ steps.push.outputs.digest }}
+        run: terraform plan -input=false -no-color
+
+      - name: Terraform Apply
+        working-directory: infra
+        env:
+          TF_VAR_image: ${{ steps.push.outputs.digest }}
+        run: terraform apply -auto-approve
