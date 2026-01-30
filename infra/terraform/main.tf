@@ -50,12 +50,6 @@ resource "google_cloud_run_v2_service" "api" {
     containers {
       image = var.image
 
-      # Cloud Run標準のPORT=8080を使うなら省略可
-      env {
-        name  = "PORT"
-        value = "8080"
-      }
-
       # あとでここにMODEL名などを入れていく
       # env { name="GEMINI_MODEL" value="..." }
     }
