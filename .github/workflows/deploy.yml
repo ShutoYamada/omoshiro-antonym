@@ -91,17 +91,17 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        working-directory: infra
+        working-directory: infra/terraform
         run: terraform init
 
       - name: Terraform Plan
-        working-directory: infra
+        working-directory: infra/terraform
         env:
           TF_VAR_image: ${{ steps.push.outputs.digest }}
         run: terraform plan -input=false -no-color
 
       - name: Terraform Apply
-        working-directory: infra
+        working-directory: infra/terraform
         env:
           TF_VAR_image: ${{ steps.push.outputs.digest }}
         run: terraform apply -auto-approve
