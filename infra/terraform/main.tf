@@ -10,18 +10,28 @@ locals {
   ]
 }
 
+resource "google_project_service" "services" {
+  for_each           = toset(local.services)
+  project            = var.project_id
+  service            = each.key
+  disable_on_destroy = false
+}
+
 # 2) Artifact Registry（Docker）
 resource "google_artifact_registry_repository" "repo" {
   location      = var.region
   repository_id = "omoshiro"
   description   = "container images for omoshiro antonym mvp"
   format        = "DOCKER"
+
+  depends_on = [google_project_service.services]
 }
 
 # 3) Cloud Run用サービスアカウント
 resource "google_service_account" "run_sa" {
   account_id   = "omoshiro-run-sa"
   display_name = "Cloud Run SA for omoshiro"
+  depends_on   = [google_project_service.services]
 }
 
 # 4) Vertex AI呼び出し権限
@@ -36,6 +46,7 @@ resource "google_firestore_database" "default" {
   name        = "(default)"
   location_id = var.region
   type        = "FIRESTORE_NATIVE"
+  depends_on  = [google_project_service.services]
 }
 
 # 6) Cloud Run サービス
@@ -61,6 +72,7 @@ resource "google_cloud_run_v2_service" "api" {
   }
 
   depends_on = [
+    google_project_service.services,
     google_project_iam_member.aiplatform_user
   ]
 }
