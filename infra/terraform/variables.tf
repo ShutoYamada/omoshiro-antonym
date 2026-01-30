@@ -16,4 +16,7 @@ variable "image" {
 }
 
 # MVPなので unauth を許す
-variable "allow_unauthenticated" { type = bool default = true }
+variable "allow_unauthenticated" { 
+    type = bool 
+    default = true 
+}
