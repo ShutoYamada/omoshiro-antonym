@@ -37,6 +37,7 @@ jobs:
       TF_VAR_region: asia-northeast1
       TF_VAR_service_name: omoshiro-api
       TF_VAR_image: asia-northeast1-docker.pkg.dev/omoshiro-antonym/omoshiro/api:dev
+      TF_VAR_service_account_email: "omoshiro-run-sa@omoshiro-antonym.iam.gserviceaccount.com"
 
     steps:
       - uses: actions/checkout@v4

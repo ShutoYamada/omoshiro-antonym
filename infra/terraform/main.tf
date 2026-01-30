@@ -27,18 +27,13 @@ resource "google_artifact_registry_repository" "repo" {
   depends_on = [google_project_service.services]
 }
 
-# 3) Cloud Run用サービスアカウント
-resource "google_service_account" "run_sa" {
-  account_id   = "omoshiro-run-sa"
-  display_name = "Cloud Run SA for omoshiro"
-  depends_on   = [google_project_service.services]
-}
+# 3) Cloud Run用サービスアカウント => いったんナシで
 
 # 4) Vertex AI呼び出し権限
 resource "google_project_iam_member" "aiplatform_user" {
   project = var.project_id
   role    = "roles/aiplatform.user"
-  member  = "serviceAccount:${google_service_account.run_sa.email}"
+  member  = "serviceAccount:${var.service_account_email}"
 }
 
 # 5) Firestore（Native mode）
@@ -55,7 +50,7 @@ resource "google_cloud_run_v2_service" "api" {
   location = var.region
 
   template {
-    service_account = google_service_account.run_sa.email
+    service_account = var.service_account_email
 
     containers {
       image = var.image

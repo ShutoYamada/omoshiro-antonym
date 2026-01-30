@@ -20,3 +20,8 @@ variable "allow_unauthenticated" {
     type = bool 
     default = true 
 }
+
+variable "run_service_account_email" {
+  description = "Service Account email used by Cloud Run"
+  type        = string
+}
