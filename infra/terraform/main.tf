@@ -27,14 +27,9 @@ resource "google_artifact_registry_repository" "repo" {
   depends_on = [google_project_service.services]
 }
 
-# 3) Cloud Run用サービスアカウント => いったんナシで
+# 3) Cloud Run用サービスアカウント => 手動で
 
-# 4) Vertex AI呼び出し権限
-resource "google_project_iam_member" "aiplatform_user" {
-  project = var.project_id
-  role    = "roles/aiplatform.user"
-  member  = "serviceAccount:${var.service_account_email}"
-}
+# 4) Vertex AI呼び出し権限 => 手動で
 
 # 5) Firestore（Native mode）
 resource "google_firestore_database" "default" {
@@ -67,8 +62,7 @@ resource "google_cloud_run_v2_service" "api" {
   }
 
   depends_on = [
-    google_project_service.services,
-    google_project_iam_member.aiplatform_user
+    google_project_service.services
   ]
 }
 
