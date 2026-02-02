@@ -50,8 +50,10 @@ resource "google_cloud_run_v2_service" "api" {
     containers {
       image = var.image
 
-      # あとでここにMODEL名などを入れていく
-      # env { name="GEMINI_MODEL" value="..." }
+      env { 
+        name="GOOGLE_CLOUD_PROJECT" 
+        value=var.project_id
+      }
     }
   }
 
