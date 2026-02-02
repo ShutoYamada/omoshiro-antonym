@@ -7,8 +7,7 @@ on:
         description: "Deploy target"
         required: true
         type: choice
-        # options: [api, web, both]
-        options: [api]
+        options: [api, web, both]
 
 concurrency:
   group: deploy-staging
