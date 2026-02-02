@@ -8,4 +8,5 @@ export default defineConfig({
     host: true,
     port: 5173,
   },
+  base: process.env.BASE_URL ?? "/",
 })

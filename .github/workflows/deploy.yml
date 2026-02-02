@@ -117,6 +117,8 @@ jobs:
       contents: write
       id-token: write
       pages: write
+    env:
+      BASE_URL: "/${{ github.event.repository.name }}/"
     steps:
       - uses: actions/checkout@v4
 
