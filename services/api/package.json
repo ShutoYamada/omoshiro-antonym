@@ -13,9 +13,11 @@
     "@google-cloud/vertexai": "^1.10.0",
     "@google/genai": "^1.38.0",
     "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.6",
     "express": "^4.21.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.0",
     "@types/node": "^22.9.0",
     "nodemon": "^3.1.7",

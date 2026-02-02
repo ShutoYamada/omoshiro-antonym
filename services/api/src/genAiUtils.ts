@@ -19,17 +19,18 @@ const generationConfig = {
 /**
  * 対義語の生成処理
  */
-export async function generateFunnyAntonym(word: string) {
+export async function generateFunnyAntonym(word: string, style?: string) {
       const prompt = `
 あなたは「おもしろ対義語ジェネレータ」です。
 入力語: 「${word}」
+${style ? `テイスト: 「${style}」` : ""}
 条件:
 - 厳密な辞書的対義語でなくてよい（むしろズラして面白く）
 - ただし元の語と“対”になっている納得感は残す
 - 10個出す
 - それぞれに短い理由（1行）を添える
-出力はJSONで:
-{"candidates":[{"antonym":"...","reason":"..."}]}
+出力はJSONで(scoreは0-10の整数):
+{"candidates":[{"antonym":"...","reason":"...",score:8}]}
 `.trim();
 
   const req = {
