@@ -6,7 +6,7 @@ services:
     volumes:
       - .:/app
       - ~/.config/gcloud/application_default_credentials.json:/gcloud/adc.json:ro
-    command: sh -c "npm install -g pnpm && pnpm install && tail -f /dev/null"
+    command: sh -c "npm install -g pnpm && pnpm install && pnpm add -w -D depcheck && tail -f /dev/null"
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/gcloud/adc.json
     env_file:
