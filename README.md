@@ -4,6 +4,8 @@
 
 入力された単語の面白い対義語を生成するWebアプリ。
 
+![スクリーンショット](images/screenshot.png)
+
 # アーキテクチャ
 
 - GoogleCloud
